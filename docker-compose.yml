@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  mysql_db:
+    build: ./db
+    container_name: mysql_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  streamlit_app:
+    build: ./app
+    container_name: streamlit_app
+    restart: always
+    depends_on:
+      - mysql_db
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./uploads:/app/uploads  # Maps the uploads directory to the host machine
+
+volumes:
+  mysql_data:
